@@ -1,0 +1,67 @@
+import tkinter as tk
+from tkinter import filedialog
+from collections import defaultdict
+
+# Función para contar los caracteres sin usar Counter
+def contar_caracteres(texto):
+    # Definir los signos de puntuación en chino que queremos eliminar
+    signos_puntuacion = "，。、；！？：”“「」『』（）《》〈〉"
+    
+    # Eliminar signos de puntuación y espacios en blanco
+    texto_filtrado = "".join([char for char in texto if char not in signos_puntuacion and not char.isspace()])
+    
+    # Contar caracteres manualmente
+    frecuencia_caracteres = {}
+    for caracter in texto_filtrado:
+        if caracter in frecuencia_caracteres:
+            frecuencia_caracteres[caracter] += 1
+        else:
+            frecuencia_caracteres[caracter] = 1
+
+    # Ordenar caracteres por frecuencia
+    caracteres_ordenados = sorted(frecuencia_caracteres.items(), key=lambda x: x[1], reverse=True)
+    return [caracter for caracter, _ in caracteres_ordenados]
+
+# Función para procesar el texto ingresado y guardar el resultado en un archivo
+def procesar_texto():
+    texto = text_box.get("1.0", tk.END)
+    caracteres_ordenados = contar_caracteres(texto)
+    
+    # Guardar en archivo de texto
+    with open("caracteres_frecuencia.txt", "w", encoding="utf-8") as file:
+        for caracter in caracteres_ordenados:
+            file.write(f"{caracter}\n")
+    resultado_label.config(text="Archivo 'caracteres_frecuencia.txt' guardado con éxito.")
+
+# Función para cargar un archivo de texto
+def cargar_archivo():
+    archivo = filedialog.askopenfilename(title="Selecciona un archivo de texto", filetypes=[("Archivos de texto", "*.txt")])
+    if archivo:
+        with open(archivo, "r", encoding="utf-8") as file:
+            texto = file.read()
+        text_box.delete("1.0", tk.END)
+        text_box.insert("1.0", texto)
+
+# Configurar la interfaz gráfica
+root = tk.Tk()
+root.title("Contador de Caracteres Chinos")
+root.geometry("400x400")
+
+# Área de texto para pegar el texto
+text_box = tk.Text(root, height=10, width=50)
+text_box.pack(pady=10)
+
+# Botón para cargar un archivo de texto
+cargar_btn = tk.Button(root, text="Cargar Archivo", command=cargar_archivo)
+cargar_btn.pack()
+
+# Botón para procesar el texto y guardar el archivo
+procesar_btn = tk.Button(root, text="Procesar Texto", command=procesar_texto)
+procesar_btn.pack(pady=10)
+
+# Etiqueta de resultado
+resultado_label = tk.Label(root, text="")
+resultado_label.pack()
+
+# Ejecutar la interfaz
+root.mainloop()
