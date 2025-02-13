@@ -1,0 +1,46 @@
+from collections import Counter
+
+# Función para procesar el texto y guardar en archivo de texto
+def procesar_texto_a_txt(texto):
+    # Definir los signos de puntuación en chino que queremos eliminar
+    signos_puntuacion = "，。、；！？：”“「」『』（）《》〈〉"
+    
+    # Filtrar el texto para eliminar signos de puntuación
+    texto_filtrado = "".join([char for char in texto if char not in signos_puntuacion and not char.isspace()])
+    
+    # Contar la frecuencia de cada carácter
+    frecuencia_caracteres = Counter(texto_filtrado)
+    
+    # Ordenar los caracteres por frecuencia de uso
+    caracteres_ordenados = sorted(frecuencia_caracteres.items(), key=lambda x: x[1], reverse=True)
+    
+    # Guardar en un archivo de texto
+    with open("caracteres_frecuencia.txt", "w", encoding="utf-8") as file:
+        for caracter, _ in caracteres_ordenados:
+            file.write(f"{caracter}\n")
+    
+    print("Archivo 'caracteres_frecuencia.txt' guardado con éxito.")
+
+# Ejemplo de uso
+parrafo = """
+始計第一
+
+孫子曰：兵者，國之大事，死生之地，存亡之道，不可不察也。
+
+故經之以五事，校之以計，而索其情：一曰道，二曰天，三曰地，四曰將，五曰法。
+
+道者，令民與上同意，可與之死，可與之生，而不畏危也；天者，陰陽、寒暑、時制也；地者，遠近、險易、廣狹、死生也；將者，智、信、仁、勇、嚴也；法者，曲制、官道、主用也。凡此五者，將莫不聞，知之者勝，不知者不勝。
+
+故校之以計，而索其情，曰：主孰有道？將孰有能？天地孰得？法令孰行？兵眾孰強？士卒孰練？賞罰孰明？吾以此知勝負矣。
+
+將聽吾計，用之必勝，留之；將不聽吾計，用之必敗，去之。
+
+計利以聽，乃為之勢，以佐其外。勢者，因利而制權也。
+
+兵者，詭道也。故能而示之不能，用而示之不用，近而示之遠，遠而示之近。利而誘之，亂而取之，實而備之，強而避之，怒而撓之，卑而驕之，佚而勞之，親而離之，攻其無備，出其不意。此兵家之勝，不可先傳也。
+
+夫未戰而廟算勝者，得算多也；未戰而廟算不勝者，得算少也。多算勝，少算不勝，而況無算乎！吾以此觀之，勝負見矣。
+"""
+
+# Llamar a la función con el párrafo de ejemplo
+procesar_texto_a_txt(parrafo)
